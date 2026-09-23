@@ -1,0 +1,1292 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fef7ff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="30-Day House Reset 🌸">
+<meta name="mobile-web-app-capable" content="yes">
+<title>30-Day House Reset 🌸</title>
+<style>
+:root {
+  --bg:#fef7ff; --purple:#a78bfa; --pink:#f472b6; --orange:#fb923c;
+  --border:#fae8ff; --ink:#4c3b5f; --muted:#806f8e; --green:#16a34a;
+  --green-bg:#f0fdf4; --white:#fff;
+}
+* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html { background:var(--bg); scroll-behavior:smooth; }
+body {
+  margin:0; background:
+    radial-gradient(circle at 12% 5%, rgba(244,114,182,.14), transparent 28%),
+    radial-gradient(circle at 92% 20%, rgba(167,139,250,.14), transparent 30%),
+    var(--bg);
+  color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  min-height:100vh; padding-bottom:calc(88px + env(safe-area-inset-bottom));
+}
+button,input { font:inherit; }
+.app { width:min(100%, 680px); margin:0 auto; }
+header {
+  position:sticky; top:0; z-index:20; padding:calc(14px + env(safe-area-inset-top)) 16px 14px;
+  color:white; background:linear-gradient(135deg,#a78bfa,#f472b6,#fb923c);
+  box-shadow:0 8px 30px rgba(126,72,132,.16); border-bottom-left-radius:22px; border-bottom-right-radius:22px;
+}
+h1 { margin:0; font-size:25px; letter-spacing:-.6px; line-height:1.12; }
+.subtitle { margin-top:5px; font-size:12px; opacity:.94; font-weight:600; }
+.progress-row { display:flex; justify-content:space-between; gap:12px; margin-top:13px; font-size:12px; font-weight:800; }
+.progress-track { height:9px; margin-top:7px; background:rgba(255,255,255,.34); border-radius:99px; overflow:hidden; }
+.progress-bar { height:100%; width:0%; background:white; border-radius:99px; transition:width .25s ease; }
+.chips { display:flex; gap:8px; overflow:auto; padding:14px 16px 4px; scrollbar-width:none; }
+.chips::-webkit-scrollbar { display:none; }
+.chip {
+  flex:0 0 auto; border:1px solid var(--border); background:white; color:#725a86;
+  padding:9px 13px; border-radius:999px; font-weight:750; font-size:12px; box-shadow:0 3px 12px rgba(112,72,130,.06);
+}
+.chip.active { background:#f3e8ff; color:#7c3aed; border-color:#ddd6fe; }
+#list { padding:10px 16px 0; }
+.day-card {
+  background:rgba(255,255,255,.88); border:1px solid var(--border); border-radius:20px;
+  margin:10px 0; overflow:hidden; box-shadow:0 5px 18px rgba(112,72,130,.055);
+}
+.day-card.today { border-color:#e9d5ff; box-shadow:0 6px 22px rgba(167,139,250,.15); }
+.day-head {
+  width:100%; border:0; background:transparent; color:inherit; display:flex; align-items:center;
+  justify-content:space-between; gap:10px; padding:15px 15px; text-align:left; cursor:pointer;
+}
+.day-title { font-weight:850; font-size:16px; }
+.date-label { color:#9a7bb2; font-weight:700; font-size:12px; }
+.day-meta { display:flex; align-items:center; gap:7px; color:#9a7bb2; font-weight:800; font-size:12px; }
+.chevron { font-size:18px; line-height:1; transition:transform .2s ease; }
+.day-card.expanded .chevron { transform:rotate(180deg); }
+.day-body { padding:0 12px 13px; }
+.day-body[hidden] { display:none; }
+.day-summary { display:flex; justify-content:space-between; align-items:center; padding:0 4px 10px; color:var(--muted); font-size:12px; }
+.reward { color:#c2410c; font-weight:850; }
+.task {
+  display:flex; align-items:center; gap:10px; padding:11px 10px; margin:6px 0;
+  border:1px solid #f5eafa; border-radius:14px; background:#fff; cursor:pointer; user-select:none;
+}
+.task:has(input:checked) { background:var(--green-bg); border-color:#dcfce7; }
+.task input { position:absolute; opacity:0; pointer-events:none; }
+.checkmark {
+  width:22px; height:22px; min-width:22px; border:2px solid var(--purple); border-radius:7px;
+  display:grid; place-items:center; color:transparent; font-size:14px; font-weight:900; background:white;
+}
+.task input:checked + .checkmark { background:var(--green); border-color:var(--green); color:white; }
+.task-copy { min-width:0; display:flex; flex-direction:column; gap:2px; }
+.room { font-size:10px; font-weight:850; color:#a17fb7; text-transform:uppercase; letter-spacing:.35px; }
+.task-name { font-size:14px; font-weight:650; line-height:1.25; }
+.task input:checked ~ .task-copy .task-name { text-decoration:line-through; color:#7b8c7f; }
+footer { padding:20px 16px 30px; text-align:center; color:#927da0; font-size:11px; }
+.reset {
+  border:1px solid #fbcfe8; color:#be185d; background:#fff1f7; border-radius:12px;
+  padding:9px 14px; font-weight:800; margin-bottom:9px;
+}
+.empty { text-align:center; padding:35px 20px; color:#8b7398; }
+@media (min-width:700px) {
+  body { padding-top:12px; }
+  header { border-radius:22px; position:sticky; top:12px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <h1>30-Day House Reset ✨🌸</h1>
+  <div class="subtitle">soft girl reset • office / buy-sell-trade station • 10-15 min/day</div>
+  <div class="progress-row"><span id="counter">0/180 done</span><span id="todayLabel">Today is Day 1</span></div>
+  <div class="progress-track" aria-label="Overall progress"><div id="progressBar" class="progress-bar"></div></div>
+</header>
+
+<nav class="chips" aria-label="Filters">
+  <button class="chip active" data-filter="all" type="button">All Days</button>
+  <button class="chip" data-filter="today" type="button">Today</button>
+  <button class="chip" data-filter="office" type="button">Office Only</button>
+</nav>
+
+<main id="list">
+
+      <section class="day-card expanded" data-day="1">
+        <button class="day-head" type="button" aria-expanded="true">
+          <span class="day-title">Day 1 <span class="date-label" data-date-for="1"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body">
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span></div>
+          <div class="tasks">
+            <label class="task" data-day="1" data-room="kitchen" data-key="1-1">
+              <input type="checkbox" data-key="1-1" aria-label="Kitchen: Wipe counters + sink ✨">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">Wipe counters + sink ✨</span></span>
+            </label><label class="task" data-day="1" data-room="bathroom" data-key="1-2">
+              <input type="checkbox" data-key="1-2" aria-label="Bathroom: Wipe sink + mirror">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Wipe sink + mirror</span></span>
+            </label><label class="task" data-day="1" data-room="bedroom" data-key="1-3">
+              <input type="checkbox" data-key="1-3" aria-label="Bedroom: Make bed">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Make bed</span></span>
+            </label><label class="task" data-day="1" data-room="living" data-key="1-4">
+              <input type="checkbox" data-key="1-4" aria-label="Living Room: Fluff throws">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">Fluff throws</span></span>
+            </label><label class="task" data-day="1" data-room="entry" data-key="1-5">
+              <input type="checkbox" data-key="1-5" aria-label="Entry / Laundry: One load wash">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">One load wash</span></span>
+            </label><label class="task" data-day="1" data-room="office" data-key="1-6">
+              <input type="checkbox" data-key="1-6" aria-label="Office / BST: Clear desk 5min">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Clear desk 5min</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="2">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 2 <span class="date-label" data-date-for="2"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span></div>
+          <div class="tasks">
+            <label class="task" data-day="2" data-room="kitchen" data-key="2-1">
+              <input type="checkbox" data-key="2-1" aria-label="Kitchen: Clear one shelf">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">Clear one shelf</span></span>
+            </label><label class="task" data-day="2" data-room="bathroom" data-key="2-2">
+              <input type="checkbox" data-key="2-2" aria-label="Bathroom: Swish toilet">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Swish toilet</span></span>
+            </label><label class="task" data-day="2" data-room="bedroom" data-key="2-3">
+              <input type="checkbox" data-key="2-3" aria-label="Bedroom: Put 5 things away">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Put 5 things away</span></span>
+            </label><label class="task" data-day="2" data-room="living" data-key="2-4">
+              <input type="checkbox" data-key="2-4" aria-label="Living Room: Clear coffee table">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">Clear coffee table</span></span>
+            </label><label class="task" data-day="2" data-room="entry" data-key="2-5">
+              <input type="checkbox" data-key="2-5" aria-label="Entry / Laundry: Wipe washer">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">Wipe washer</span></span>
+            </label><label class="task" data-day="2" data-room="office" data-key="2-6">
+              <input type="checkbox" data-key="2-6" aria-label="Office / BST: Photo 3 items">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Photo 3 items</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="3">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 3 <span class="date-label" data-date-for="3"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span></div>
+          <div class="tasks">
+            <label class="task" data-day="3" data-room="kitchen" data-key="3-1">
+              <input type="checkbox" data-key="3-1" aria-label="Kitchen: Take out trash">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">Take out trash</span></span>
+            </label><label class="task" data-day="3" data-room="bathroom" data-key="3-2">
+              <input type="checkbox" data-key="3-2" aria-label="Bathroom: Empty trash">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Empty trash</span></span>
+            </label><label class="task" data-day="3" data-room="bedroom" data-key="3-3">
+              <input type="checkbox" data-key="3-3" aria-label="Bedroom: Clear nightstand">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Clear nightstand</span></span>
+            </label><label class="task" data-day="3" data-room="living" data-key="3-4">
+              <input type="checkbox" data-key="3-4" aria-label="Living Room: 5-min pick-up">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">5-min pick-up</span></span>
+            </label><label class="task" data-day="3" data-room="entry" data-key="3-5">
+              <input type="checkbox" data-key="3-5" aria-label="Entry / Laundry: Sweep entry">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">Sweep entry</span></span>
+            </label><label class="task" data-day="3" data-room="office" data-key="3-6">
+              <input type="checkbox" data-key="3-6" aria-label="Office / BST: Answer msgs">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Answer msgs</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="4">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 4 <span class="date-label" data-date-for="4"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span></div>
+          <div class="tasks">
+            <label class="task" data-day="4" data-room="kitchen" data-key="4-1">
+              <input type="checkbox" data-key="4-1" aria-label="Kitchen: 5-min fridge check">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">5-min fridge check</span></span>
+            </label><label class="task" data-day="4" data-room="bathroom" data-key="4-2">
+              <input type="checkbox" data-key="4-2" aria-label="Bathroom: Hang towels">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Hang towels</span></span>
+            </label><label class="task" data-day="4" data-room="bedroom" data-key="4-3">
+              <input type="checkbox" data-key="4-3" aria-label="Bedroom: Closet tidy">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Closet tidy</span></span>
+            </label><label class="task" data-day="4" data-room="living" data-key="4-4">
+              <input type="checkbox" data-key="4-4" aria-label="Living Room: Dust surface">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">Dust surface</span></span>
+            </label><label class="task" data-day="4" data-room="entry" data-key="4-5">
+              <input type="checkbox" data-key="4-5" aria-label="Entry / Laundry: Hang coats">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">Hang coats</span></span>
+            </label><label class="task" data-day="4" data-room="office" data-key="4-6">
+              <input type="checkbox" data-key="4-6" aria-label="Office / BST: Pack 1 order">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Pack 1 order</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="5">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 5 <span class="date-label" data-date-for="5"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span></div>
+          <div class="tasks">
+            <label class="task" data-day="5" data-room="kitchen" data-key="5-1">
+              <input type="checkbox" data-key="5-1" aria-label="Kitchen: Load dishwasher">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">Load dishwasher</span></span>
+            </label><label class="task" data-day="5" data-room="bathroom" data-key="5-2">
+              <input type="checkbox" data-key="5-2" aria-label="Bathroom: Clear counter">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Clear counter</span></span>
+            </label><label class="task" data-day="5" data-room="bedroom" data-key="5-3">
+              <input type="checkbox" data-key="5-3" aria-label="Bedroom: Change pillowcases">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Change pillowcases</span></span>
+            </label><label class="task" data-day="5" data-room="living" data-key="5-4">
+              <input type="checkbox" data-key="5-4" aria-label="Living Room: Wipe remotes">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">Wipe remotes</span></span>
+            </label><label class="task" data-day="5" data-room="entry" data-key="5-5">
+              <input type="checkbox" data-key="5-5" aria-label="Entry / Laundry: Sort mail">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">Sort mail</span></span>
+            </label><label class="task" data-day="5" data-room="office" data-key="5-6">
+              <input type="checkbox" data-key="5-6" aria-label="Office / BST: Update inventory">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Update inventory</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="6">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 6 <span class="date-label" data-date-for="6"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span></div>
+          <div class="tasks">
+            <label class="task" data-day="6" data-room="kitchen" data-key="6-1">
+              <input type="checkbox" data-key="6-1" aria-label="Kitchen: Wipe microwave">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">Wipe microwave</span></span>
+            </label><label class="task" data-day="6" data-room="bathroom" data-key="6-2">
+              <input type="checkbox" data-key="6-2" aria-label="Bathroom: Scrub shower 2m">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Scrub shower 2m</span></span>
+            </label><label class="task" data-day="6" data-room="bedroom" data-key="6-3">
+              <input type="checkbox" data-key="6-3" aria-label="Bedroom: Vacuum corner">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Vacuum corner</span></span>
+            </label><label class="task" data-day="6" data-room="living" data-key="6-4">
+              <input type="checkbox" data-key="6-4" aria-label="Living Room: Water plants">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">Water plants</span></span>
+            </label><label class="task" data-day="6" data-room="entry" data-key="6-5">
+              <input type="checkbox" data-key="6-5" aria-label="Entry / Laundry: Match socks">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">Match socks</span></span>
+            </label><label class="task" data-day="6" data-room="office" data-key="6-6">
+              <input type="checkbox" data-key="6-6" aria-label="Office / BST: Sort supplies">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Sort supplies</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="7">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 7 <span class="date-label" data-date-for="7"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span><span class="reward">🎁 Reward!</span></div>
+          <div class="tasks">
+            <label class="task" data-day="7" data-room="kitchen" data-key="7-1">
+              <input type="checkbox" data-key="7-1" aria-label="Kitchen: Junk drawer">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">Junk drawer</span></span>
+            </label><label class="task" data-day="7" data-room="bathroom" data-key="7-2">
+              <input type="checkbox" data-key="7-2" aria-label="Bathroom: Refill soap">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Refill soap</span></span>
+            </label><label class="task" data-day="7" data-room="bedroom" data-key="7-3">
+              <input type="checkbox" data-key="7-3" aria-label="Bedroom: Laundry hamper">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Laundry hamper</span></span>
+            </label><label class="task" data-day="7" data-room="living" data-key="7-4">
+              <input type="checkbox" data-key="7-4" aria-label="Living Room: Sort mail">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">Sort mail</span></span>
+            </label><label class="task" data-day="7" data-room="entry" data-key="7-5">
+              <input type="checkbox" data-key="7-5" aria-label="Entry / Laundry: Clean mirror">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">Clean mirror</span></span>
+            </label><label class="task" data-day="7" data-room="office" data-key="7-6">
+              <input type="checkbox" data-key="7-6" aria-label="Office / BST: Wipe desk">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Wipe desk</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="8">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 8 <span class="date-label" data-date-for="8"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span></div>
+          <div class="tasks">
+            <label class="task" data-day="8" data-room="kitchen" data-key="8-1">
+              <input type="checkbox" data-key="8-1" aria-label="Kitchen: Clean stovetop">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">Clean stovetop</span></span>
+            </label><label class="task" data-day="8" data-room="bathroom" data-key="8-2">
+              <input type="checkbox" data-key="8-2" aria-label="Bathroom: Organize cabinet">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Organize cabinet</span></span>
+            </label><label class="task" data-day="8" data-room="bedroom" data-key="8-3">
+              <input type="checkbox" data-key="8-3" aria-label="Bedroom: Open window">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Open window</span></span>
+            </label><label class="task" data-day="8" data-room="living" data-key="8-4">
+              <input type="checkbox" data-key="8-4" aria-label="Living Room: Vacuum rug">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">Vacuum rug</span></span>
+            </label><label class="task" data-day="8" data-room="entry" data-key="8-5">
+              <input type="checkbox" data-key="8-5" aria-label="Entry / Laundry: Empty trash">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">Empty trash</span></span>
+            </label><label class="task" data-day="8" data-room="office" data-key="8-6">
+              <input type="checkbox" data-key="8-6" aria-label="Office / BST: List 1 new">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">List 1 new</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="9">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 9 <span class="date-label" data-date-for="9"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span></div>
+          <div class="tasks">
+            <label class="task" data-day="9" data-room="kitchen" data-key="9-1">
+              <input type="checkbox" data-key="9-1" aria-label="Kitchen: Wash 2 pans">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">Wash 2 pans</span></span>
+            </label><label class="task" data-day="9" data-room="bathroom" data-key="9-2">
+              <input type="checkbox" data-key="9-2" aria-label="Bathroom: Shake rug">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Shake rug</span></span>
+            </label><label class="task" data-day="9" data-room="bedroom" data-key="9-3">
+              <input type="checkbox" data-key="9-3" aria-label="Bedroom: Fluff pillows">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Fluff pillows</span></span>
+            </label><label class="task" data-day="9" data-room="living" data-key="9-4">
+              <input type="checkbox" data-key="9-4" aria-label="Living Room: Shoes away">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">Shoes away</span></span>
+            </label><label class="task" data-day="9" data-room="entry" data-key="9-5">
+              <input type="checkbox" data-key="9-5" aria-label="Entry / Laundry: Put clothes away">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">Put clothes away</span></span>
+            </label><label class="task" data-day="9" data-room="office" data-key="9-6">
+              <input type="checkbox" data-key="9-6" aria-label="Office / BST: Price 3 comps">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Price 3 comps</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="10">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 10 <span class="date-label" data-date-for="10"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span></div>
+          <div class="tasks">
+            <label class="task" data-day="10" data-room="kitchen" data-key="10-1">
+              <input type="checkbox" data-key="10-1" aria-label="Kitchen: Restock snacks">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">Restock snacks</span></span>
+            </label><label class="task" data-day="10" data-room="bathroom" data-key="10-2">
+              <input type="checkbox" data-key="10-2" aria-label="Bathroom: Spray fresh">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Spray fresh</span></span>
+            </label><label class="task" data-day="10" data-room="bedroom" data-key="10-3">
+              <input type="checkbox" data-key="10-3" aria-label="Bedroom: Donate 1 thing">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Donate 1 thing</span></span>
+            </label><label class="task" data-day="10" data-room="living" data-key="10-4">
+              <input type="checkbox" data-key="10-4" aria-label="Living Room: Song + tidy">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">Song + tidy</span></span>
+            </label><label class="task" data-day="10" data-room="entry" data-key="10-5">
+              <input type="checkbox" data-key="10-5" aria-label="Entry / Laundry: Spritz">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">Spritz</span></span>
+            </label><label class="task" data-day="10" data-room="office" data-key="10-6">
+              <input type="checkbox" data-key="10-6" aria-label="Office / BST: Clean backdrop">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Clean backdrop</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="11">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 11 <span class="date-label" data-date-for="11"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span></div>
+          <div class="tasks">
+            <label class="task" data-day="11" data-room="kitchen" data-key="11-1">
+              <input type="checkbox" data-key="11-1" aria-label="Kitchen: Wipe counters + sink ✨">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">Wipe counters + sink ✨</span></span>
+            </label><label class="task" data-day="11" data-room="bathroom" data-key="11-2">
+              <input type="checkbox" data-key="11-2" aria-label="Bathroom: Wipe sink + mirror">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Wipe sink + mirror</span></span>
+            </label><label class="task" data-day="11" data-room="bedroom" data-key="11-3">
+              <input type="checkbox" data-key="11-3" aria-label="Bedroom: Make bed">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Make bed</span></span>
+            </label><label class="task" data-day="11" data-room="living" data-key="11-4">
+              <input type="checkbox" data-key="11-4" aria-label="Living Room: Fluff throws">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">Fluff throws</span></span>
+            </label><label class="task" data-day="11" data-room="entry" data-key="11-5">
+              <input type="checkbox" data-key="11-5" aria-label="Entry / Laundry: One load wash">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">One load wash</span></span>
+            </label><label class="task" data-day="11" data-room="office" data-key="11-6">
+              <input type="checkbox" data-key="11-6" aria-label="Office / BST: Prep mailers">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Prep mailers</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="12">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 12 <span class="date-label" data-date-for="12"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span></div>
+          <div class="tasks">
+            <label class="task" data-day="12" data-room="kitchen" data-key="12-1">
+              <input type="checkbox" data-key="12-1" aria-label="Kitchen: Clear one shelf">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">Clear one shelf</span></span>
+            </label><label class="task" data-day="12" data-room="bathroom" data-key="12-2">
+              <input type="checkbox" data-key="12-2" aria-label="Bathroom: Swish toilet">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Swish toilet</span></span>
+            </label><label class="task" data-day="12" data-room="bedroom" data-key="12-3">
+              <input type="checkbox" data-key="12-3" aria-label="Bedroom: Put 5 things away">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Put 5 things away</span></span>
+            </label><label class="task" data-day="12" data-room="living" data-key="12-4">
+              <input type="checkbox" data-key="12-4" aria-label="Living Room: Clear coffee table">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">Clear coffee table</span></span>
+            </label><label class="task" data-day="12" data-room="entry" data-key="12-5">
+              <input type="checkbox" data-key="12-5" aria-label="Entry / Laundry: Wipe washer">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">Wipe washer</span></span>
+            </label><label class="task" data-day="12" data-room="office" data-key="12-6">
+              <input type="checkbox" data-key="12-6" aria-label="Office / BST: Declutter bin">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Declutter bin</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="13">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 13 <span class="date-label" data-date-for="13"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span></div>
+          <div class="tasks">
+            <label class="task" data-day="13" data-room="kitchen" data-key="13-1">
+              <input type="checkbox" data-key="13-1" aria-label="Kitchen: Take out trash">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">Take out trash</span></span>
+            </label><label class="task" data-day="13" data-room="bathroom" data-key="13-2">
+              <input type="checkbox" data-key="13-2" aria-label="Bathroom: Empty trash">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Empty trash</span></span>
+            </label><label class="task" data-day="13" data-room="bedroom" data-key="13-3">
+              <input type="checkbox" data-key="13-3" aria-label="Bedroom: Clear nightstand">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Clear nightstand</span></span>
+            </label><label class="task" data-day="13" data-room="living" data-key="13-4">
+              <input type="checkbox" data-key="13-4" aria-label="Living Room: 5-min pick-up">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">5-min pick-up</span></span>
+            </label><label class="task" data-day="13" data-room="entry" data-key="13-5">
+              <input type="checkbox" data-key="13-5" aria-label="Entry / Laundry: Sweep entry">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">Sweep entry</span></span>
+            </label><label class="task" data-day="13" data-room="office" data-key="13-6">
+              <input type="checkbox" data-key="13-6" aria-label="Office / BST: Post to story">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Post to story</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="14">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 14 <span class="date-label" data-date-for="14"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span><span class="reward">🎁 Reward!</span></div>
+          <div class="tasks">
+            <label class="task" data-day="14" data-room="kitchen" data-key="14-1">
+              <input type="checkbox" data-key="14-1" aria-label="Kitchen: 5-min fridge check">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">5-min fridge check</span></span>
+            </label><label class="task" data-day="14" data-room="bathroom" data-key="14-2">
+              <input type="checkbox" data-key="14-2" aria-label="Bathroom: Hang towels">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Hang towels</span></span>
+            </label><label class="task" data-day="14" data-room="bedroom" data-key="14-3">
+              <input type="checkbox" data-key="14-3" aria-label="Bedroom: Closet tidy">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Closet tidy</span></span>
+            </label><label class="task" data-day="14" data-room="living" data-key="14-4">
+              <input type="checkbox" data-key="14-4" aria-label="Living Room: Dust surface">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">Dust surface</span></span>
+            </label><label class="task" data-day="14" data-room="entry" data-key="14-5">
+              <input type="checkbox" data-key="14-5" aria-label="Entry / Laundry: Hang coats">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">Hang coats</span></span>
+            </label><label class="task" data-day="14" data-room="office" data-key="14-6">
+              <input type="checkbox" data-key="14-6" aria-label="Office / BST: Tidy cords">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Tidy cords</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="15">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 15 <span class="date-label" data-date-for="15"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span></div>
+          <div class="tasks">
+            <label class="task" data-day="15" data-room="kitchen" data-key="15-1">
+              <input type="checkbox" data-key="15-1" aria-label="Kitchen: Load dishwasher">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">Load dishwasher</span></span>
+            </label><label class="task" data-day="15" data-room="bathroom" data-key="15-2">
+              <input type="checkbox" data-key="15-2" aria-label="Bathroom: Clear counter">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Clear counter</span></span>
+            </label><label class="task" data-day="15" data-room="bedroom" data-key="15-3">
+              <input type="checkbox" data-key="15-3" aria-label="Bedroom: Change pillowcases">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Change pillowcases</span></span>
+            </label><label class="task" data-day="15" data-room="living" data-key="15-4">
+              <input type="checkbox" data-key="15-4" aria-label="Living Room: Wipe remotes">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">Wipe remotes</span></span>
+            </label><label class="task" data-day="15" data-room="entry" data-key="15-5">
+              <input type="checkbox" data-key="15-5" aria-label="Entry / Laundry: Sort mail">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">Sort mail</span></span>
+            </label><label class="task" data-day="15" data-room="office" data-key="15-6">
+              <input type="checkbox" data-key="15-6" aria-label="Office / BST: Organize receipts">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Organize receipts</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="16">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 16 <span class="date-label" data-date-for="16"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span></div>
+          <div class="tasks">
+            <label class="task" data-day="16" data-room="kitchen" data-key="16-1">
+              <input type="checkbox" data-key="16-1" aria-label="Kitchen: Wipe microwave">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">Wipe microwave</span></span>
+            </label><label class="task" data-day="16" data-room="bathroom" data-key="16-2">
+              <input type="checkbox" data-key="16-2" aria-label="Bathroom: Scrub shower 2m">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Scrub shower 2m</span></span>
+            </label><label class="task" data-day="16" data-room="bedroom" data-key="16-3">
+              <input type="checkbox" data-key="16-3" aria-label="Bedroom: Vacuum corner">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Vacuum corner</span></span>
+            </label><label class="task" data-day="16" data-room="living" data-key="16-4">
+              <input type="checkbox" data-key="16-4" aria-label="Living Room: Water plants">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">Water plants</span></span>
+            </label><label class="task" data-day="16" data-room="entry" data-key="16-5">
+              <input type="checkbox" data-key="16-5" aria-label="Entry / Laundry: Match socks">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">Match socks</span></span>
+            </label><label class="task" data-day="16" data-room="office" data-key="16-6">
+              <input type="checkbox" data-key="16-6" aria-label="Office / BST: Clear desk 5min">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Clear desk 5min</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="17">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 17 <span class="date-label" data-date-for="17"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span></div>
+          <div class="tasks">
+            <label class="task" data-day="17" data-room="kitchen" data-key="17-1">
+              <input type="checkbox" data-key="17-1" aria-label="Kitchen: Junk drawer">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">Junk drawer</span></span>
+            </label><label class="task" data-day="17" data-room="bathroom" data-key="17-2">
+              <input type="checkbox" data-key="17-2" aria-label="Bathroom: Refill soap">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Refill soap</span></span>
+            </label><label class="task" data-day="17" data-room="bedroom" data-key="17-3">
+              <input type="checkbox" data-key="17-3" aria-label="Bedroom: Laundry hamper">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Laundry hamper</span></span>
+            </label><label class="task" data-day="17" data-room="living" data-key="17-4">
+              <input type="checkbox" data-key="17-4" aria-label="Living Room: Sort mail">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">Sort mail</span></span>
+            </label><label class="task" data-day="17" data-room="entry" data-key="17-5">
+              <input type="checkbox" data-key="17-5" aria-label="Entry / Laundry: Clean mirror">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">Clean mirror</span></span>
+            </label><label class="task" data-day="17" data-room="office" data-key="17-6">
+              <input type="checkbox" data-key="17-6" aria-label="Office / BST: Photo 3 items">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Photo 3 items</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="18">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 18 <span class="date-label" data-date-for="18"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span></div>
+          <div class="tasks">
+            <label class="task" data-day="18" data-room="kitchen" data-key="18-1">
+              <input type="checkbox" data-key="18-1" aria-label="Kitchen: Clean stovetop">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">Clean stovetop</span></span>
+            </label><label class="task" data-day="18" data-room="bathroom" data-key="18-2">
+              <input type="checkbox" data-key="18-2" aria-label="Bathroom: Organize cabinet">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Organize cabinet</span></span>
+            </label><label class="task" data-day="18" data-room="bedroom" data-key="18-3">
+              <input type="checkbox" data-key="18-3" aria-label="Bedroom: Open window">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Open window</span></span>
+            </label><label class="task" data-day="18" data-room="living" data-key="18-4">
+              <input type="checkbox" data-key="18-4" aria-label="Living Room: Vacuum rug">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">Vacuum rug</span></span>
+            </label><label class="task" data-day="18" data-room="entry" data-key="18-5">
+              <input type="checkbox" data-key="18-5" aria-label="Entry / Laundry: Empty trash">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">Empty trash</span></span>
+            </label><label class="task" data-day="18" data-room="office" data-key="18-6">
+              <input type="checkbox" data-key="18-6" aria-label="Office / BST: Answer msgs">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Answer msgs</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="19">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 19 <span class="date-label" data-date-for="19"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span></div>
+          <div class="tasks">
+            <label class="task" data-day="19" data-room="kitchen" data-key="19-1">
+              <input type="checkbox" data-key="19-1" aria-label="Kitchen: Wash 2 pans">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">Wash 2 pans</span></span>
+            </label><label class="task" data-day="19" data-room="bathroom" data-key="19-2">
+              <input type="checkbox" data-key="19-2" aria-label="Bathroom: Shake rug">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Shake rug</span></span>
+            </label><label class="task" data-day="19" data-room="bedroom" data-key="19-3">
+              <input type="checkbox" data-key="19-3" aria-label="Bedroom: Fluff pillows">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Fluff pillows</span></span>
+            </label><label class="task" data-day="19" data-room="living" data-key="19-4">
+              <input type="checkbox" data-key="19-4" aria-label="Living Room: Shoes away">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">Shoes away</span></span>
+            </label><label class="task" data-day="19" data-room="entry" data-key="19-5">
+              <input type="checkbox" data-key="19-5" aria-label="Entry / Laundry: Put clothes away">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">Put clothes away</span></span>
+            </label><label class="task" data-day="19" data-room="office" data-key="19-6">
+              <input type="checkbox" data-key="19-6" aria-label="Office / BST: Pack 1 order">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Pack 1 order</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="20">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 20 <span class="date-label" data-date-for="20"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span></div>
+          <div class="tasks">
+            <label class="task" data-day="20" data-room="kitchen" data-key="20-1">
+              <input type="checkbox" data-key="20-1" aria-label="Kitchen: Restock snacks">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">Restock snacks</span></span>
+            </label><label class="task" data-day="20" data-room="bathroom" data-key="20-2">
+              <input type="checkbox" data-key="20-2" aria-label="Bathroom: Spray fresh">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Spray fresh</span></span>
+            </label><label class="task" data-day="20" data-room="bedroom" data-key="20-3">
+              <input type="checkbox" data-key="20-3" aria-label="Bedroom: Donate 1 thing">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Donate 1 thing</span></span>
+            </label><label class="task" data-day="20" data-room="living" data-key="20-4">
+              <input type="checkbox" data-key="20-4" aria-label="Living Room: Song + tidy">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">Song + tidy</span></span>
+            </label><label class="task" data-day="20" data-room="entry" data-key="20-5">
+              <input type="checkbox" data-key="20-5" aria-label="Entry / Laundry: Spritz">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">Spritz</span></span>
+            </label><label class="task" data-day="20" data-room="office" data-key="20-6">
+              <input type="checkbox" data-key="20-6" aria-label="Office / BST: Update inventory">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Update inventory</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="21">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 21 <span class="date-label" data-date-for="21"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span><span class="reward">🎁 Reward!</span></div>
+          <div class="tasks">
+            <label class="task" data-day="21" data-room="kitchen" data-key="21-1">
+              <input type="checkbox" data-key="21-1" aria-label="Kitchen: Wipe counters + sink ✨">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">Wipe counters + sink ✨</span></span>
+            </label><label class="task" data-day="21" data-room="bathroom" data-key="21-2">
+              <input type="checkbox" data-key="21-2" aria-label="Bathroom: Wipe sink + mirror">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Wipe sink + mirror</span></span>
+            </label><label class="task" data-day="21" data-room="bedroom" data-key="21-3">
+              <input type="checkbox" data-key="21-3" aria-label="Bedroom: Make bed">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Make bed</span></span>
+            </label><label class="task" data-day="21" data-room="living" data-key="21-4">
+              <input type="checkbox" data-key="21-4" aria-label="Living Room: Fluff throws">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">Fluff throws</span></span>
+            </label><label class="task" data-day="21" data-room="entry" data-key="21-5">
+              <input type="checkbox" data-key="21-5" aria-label="Entry / Laundry: One load wash">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">One load wash</span></span>
+            </label><label class="task" data-day="21" data-room="office" data-key="21-6">
+              <input type="checkbox" data-key="21-6" aria-label="Office / BST: Sort supplies">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Sort supplies</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="22">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 22 <span class="date-label" data-date-for="22"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span></div>
+          <div class="tasks">
+            <label class="task" data-day="22" data-room="kitchen" data-key="22-1">
+              <input type="checkbox" data-key="22-1" aria-label="Kitchen: Clear one shelf">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">Clear one shelf</span></span>
+            </label><label class="task" data-day="22" data-room="bathroom" data-key="22-2">
+              <input type="checkbox" data-key="22-2" aria-label="Bathroom: Swish toilet">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Swish toilet</span></span>
+            </label><label class="task" data-day="22" data-room="bedroom" data-key="22-3">
+              <input type="checkbox" data-key="22-3" aria-label="Bedroom: Put 5 things away">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Put 5 things away</span></span>
+            </label><label class="task" data-day="22" data-room="living" data-key="22-4">
+              <input type="checkbox" data-key="22-4" aria-label="Living Room: Clear coffee table">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">Clear coffee table</span></span>
+            </label><label class="task" data-day="22" data-room="entry" data-key="22-5">
+              <input type="checkbox" data-key="22-5" aria-label="Entry / Laundry: Wipe washer">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">Wipe washer</span></span>
+            </label><label class="task" data-day="22" data-room="office" data-key="22-6">
+              <input type="checkbox" data-key="22-6" aria-label="Office / BST: Wipe desk">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Wipe desk</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="23">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 23 <span class="date-label" data-date-for="23"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span></div>
+          <div class="tasks">
+            <label class="task" data-day="23" data-room="kitchen" data-key="23-1">
+              <input type="checkbox" data-key="23-1" aria-label="Kitchen: Take out trash">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">Take out trash</span></span>
+            </label><label class="task" data-day="23" data-room="bathroom" data-key="23-2">
+              <input type="checkbox" data-key="23-2" aria-label="Bathroom: Empty trash">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Empty trash</span></span>
+            </label><label class="task" data-day="23" data-room="bedroom" data-key="23-3">
+              <input type="checkbox" data-key="23-3" aria-label="Bedroom: Clear nightstand">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Clear nightstand</span></span>
+            </label><label class="task" data-day="23" data-room="living" data-key="23-4">
+              <input type="checkbox" data-key="23-4" aria-label="Living Room: 5-min pick-up">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">5-min pick-up</span></span>
+            </label><label class="task" data-day="23" data-room="entry" data-key="23-5">
+              <input type="checkbox" data-key="23-5" aria-label="Entry / Laundry: Sweep entry">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">Sweep entry</span></span>
+            </label><label class="task" data-day="23" data-room="office" data-key="23-6">
+              <input type="checkbox" data-key="23-6" aria-label="Office / BST: List 1 new">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">List 1 new</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="24">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 24 <span class="date-label" data-date-for="24"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span></div>
+          <div class="tasks">
+            <label class="task" data-day="24" data-room="kitchen" data-key="24-1">
+              <input type="checkbox" data-key="24-1" aria-label="Kitchen: 5-min fridge check">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">5-min fridge check</span></span>
+            </label><label class="task" data-day="24" data-room="bathroom" data-key="24-2">
+              <input type="checkbox" data-key="24-2" aria-label="Bathroom: Hang towels">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Hang towels</span></span>
+            </label><label class="task" data-day="24" data-room="bedroom" data-key="24-3">
+              <input type="checkbox" data-key="24-3" aria-label="Bedroom: Closet tidy">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Closet tidy</span></span>
+            </label><label class="task" data-day="24" data-room="living" data-key="24-4">
+              <input type="checkbox" data-key="24-4" aria-label="Living Room: Dust surface">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">Dust surface</span></span>
+            </label><label class="task" data-day="24" data-room="entry" data-key="24-5">
+              <input type="checkbox" data-key="24-5" aria-label="Entry / Laundry: Hang coats">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">Hang coats</span></span>
+            </label><label class="task" data-day="24" data-room="office" data-key="24-6">
+              <input type="checkbox" data-key="24-6" aria-label="Office / BST: Price 3 comps">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Price 3 comps</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="25">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 25 <span class="date-label" data-date-for="25"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span></div>
+          <div class="tasks">
+            <label class="task" data-day="25" data-room="kitchen" data-key="25-1">
+              <input type="checkbox" data-key="25-1" aria-label="Kitchen: Load dishwasher">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">Load dishwasher</span></span>
+            </label><label class="task" data-day="25" data-room="bathroom" data-key="25-2">
+              <input type="checkbox" data-key="25-2" aria-label="Bathroom: Clear counter">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Clear counter</span></span>
+            </label><label class="task" data-day="25" data-room="bedroom" data-key="25-3">
+              <input type="checkbox" data-key="25-3" aria-label="Bedroom: Change pillowcases">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Change pillowcases</span></span>
+            </label><label class="task" data-day="25" data-room="living" data-key="25-4">
+              <input type="checkbox" data-key="25-4" aria-label="Living Room: Wipe remotes">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">Wipe remotes</span></span>
+            </label><label class="task" data-day="25" data-room="entry" data-key="25-5">
+              <input type="checkbox" data-key="25-5" aria-label="Entry / Laundry: Sort mail">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">Sort mail</span></span>
+            </label><label class="task" data-day="25" data-room="office" data-key="25-6">
+              <input type="checkbox" data-key="25-6" aria-label="Office / BST: Clean backdrop">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Clean backdrop</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="26">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 26 <span class="date-label" data-date-for="26"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span></div>
+          <div class="tasks">
+            <label class="task" data-day="26" data-room="kitchen" data-key="26-1">
+              <input type="checkbox" data-key="26-1" aria-label="Kitchen: Wipe microwave">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">Wipe microwave</span></span>
+            </label><label class="task" data-day="26" data-room="bathroom" data-key="26-2">
+              <input type="checkbox" data-key="26-2" aria-label="Bathroom: Scrub shower 2m">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Scrub shower 2m</span></span>
+            </label><label class="task" data-day="26" data-room="bedroom" data-key="26-3">
+              <input type="checkbox" data-key="26-3" aria-label="Bedroom: Vacuum corner">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Vacuum corner</span></span>
+            </label><label class="task" data-day="26" data-room="living" data-key="26-4">
+              <input type="checkbox" data-key="26-4" aria-label="Living Room: Water plants">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">Water plants</span></span>
+            </label><label class="task" data-day="26" data-room="entry" data-key="26-5">
+              <input type="checkbox" data-key="26-5" aria-label="Entry / Laundry: Match socks">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">Match socks</span></span>
+            </label><label class="task" data-day="26" data-room="office" data-key="26-6">
+              <input type="checkbox" data-key="26-6" aria-label="Office / BST: Prep mailers">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Prep mailers</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="27">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 27 <span class="date-label" data-date-for="27"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span></div>
+          <div class="tasks">
+            <label class="task" data-day="27" data-room="kitchen" data-key="27-1">
+              <input type="checkbox" data-key="27-1" aria-label="Kitchen: Junk drawer">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">Junk drawer</span></span>
+            </label><label class="task" data-day="27" data-room="bathroom" data-key="27-2">
+              <input type="checkbox" data-key="27-2" aria-label="Bathroom: Refill soap">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Refill soap</span></span>
+            </label><label class="task" data-day="27" data-room="bedroom" data-key="27-3">
+              <input type="checkbox" data-key="27-3" aria-label="Bedroom: Laundry hamper">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Laundry hamper</span></span>
+            </label><label class="task" data-day="27" data-room="living" data-key="27-4">
+              <input type="checkbox" data-key="27-4" aria-label="Living Room: Sort mail">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">Sort mail</span></span>
+            </label><label class="task" data-day="27" data-room="entry" data-key="27-5">
+              <input type="checkbox" data-key="27-5" aria-label="Entry / Laundry: Clean mirror">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">Clean mirror</span></span>
+            </label><label class="task" data-day="27" data-room="office" data-key="27-6">
+              <input type="checkbox" data-key="27-6" aria-label="Office / BST: Declutter bin">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Declutter bin</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="28">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 28 <span class="date-label" data-date-for="28"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span><span class="reward">🎁 Reward!</span></div>
+          <div class="tasks">
+            <label class="task" data-day="28" data-room="kitchen" data-key="28-1">
+              <input type="checkbox" data-key="28-1" aria-label="Kitchen: Clean stovetop">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">Clean stovetop</span></span>
+            </label><label class="task" data-day="28" data-room="bathroom" data-key="28-2">
+              <input type="checkbox" data-key="28-2" aria-label="Bathroom: Organize cabinet">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Organize cabinet</span></span>
+            </label><label class="task" data-day="28" data-room="bedroom" data-key="28-3">
+              <input type="checkbox" data-key="28-3" aria-label="Bedroom: Open window">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Open window</span></span>
+            </label><label class="task" data-day="28" data-room="living" data-key="28-4">
+              <input type="checkbox" data-key="28-4" aria-label="Living Room: Vacuum rug">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">Vacuum rug</span></span>
+            </label><label class="task" data-day="28" data-room="entry" data-key="28-5">
+              <input type="checkbox" data-key="28-5" aria-label="Entry / Laundry: Empty trash">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">Empty trash</span></span>
+            </label><label class="task" data-day="28" data-room="office" data-key="28-6">
+              <input type="checkbox" data-key="28-6" aria-label="Office / BST: Post to story">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Post to story</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="29">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 29 <span class="date-label" data-date-for="29"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span></div>
+          <div class="tasks">
+            <label class="task" data-day="29" data-room="kitchen" data-key="29-1">
+              <input type="checkbox" data-key="29-1" aria-label="Kitchen: Wash 2 pans">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">Wash 2 pans</span></span>
+            </label><label class="task" data-day="29" data-room="bathroom" data-key="29-2">
+              <input type="checkbox" data-key="29-2" aria-label="Bathroom: Shake rug">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Shake rug</span></span>
+            </label><label class="task" data-day="29" data-room="bedroom" data-key="29-3">
+              <input type="checkbox" data-key="29-3" aria-label="Bedroom: Fluff pillows">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Fluff pillows</span></span>
+            </label><label class="task" data-day="29" data-room="living" data-key="29-4">
+              <input type="checkbox" data-key="29-4" aria-label="Living Room: Shoes away">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">Shoes away</span></span>
+            </label><label class="task" data-day="29" data-room="entry" data-key="29-5">
+              <input type="checkbox" data-key="29-5" aria-label="Entry / Laundry: Put clothes away">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">Put clothes away</span></span>
+            </label><label class="task" data-day="29" data-room="office" data-key="29-6">
+              <input type="checkbox" data-key="29-6" aria-label="Office / BST: Tidy cords">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Tidy cords</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="day-card" data-day="30">
+        <button class="day-head" type="button" aria-expanded="false">
+          <span class="day-title">Day 30 <span class="date-label" data-date-for="30"></span></span>
+          <span class="day-meta"><span class="day-percent">0%</span> <span class="chevron">⌄</span></span>
+        </button>
+        <div class="day-body" hidden>
+          <div class="day-summary"><span><strong class="day-done">0</strong>/6 tasks</span></div>
+          <div class="tasks">
+            <label class="task" data-day="30" data-room="kitchen" data-key="30-1">
+              <input type="checkbox" data-key="30-1" aria-label="Kitchen: Restock snacks">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🍳 Kitchen</span><span class="task-name">Restock snacks</span></span>
+            </label><label class="task" data-day="30" data-room="bathroom" data-key="30-2">
+              <input type="checkbox" data-key="30-2" aria-label="Bathroom: Spray fresh">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🫧 Bathroom</span><span class="task-name">Spray fresh</span></span>
+            </label><label class="task" data-day="30" data-room="bedroom" data-key="30-3">
+              <input type="checkbox" data-key="30-3" aria-label="Bedroom: Donate 1 thing">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛏️ Bedroom</span><span class="task-name">Donate 1 thing</span></span>
+            </label><label class="task" data-day="30" data-room="living" data-key="30-4">
+              <input type="checkbox" data-key="30-4" aria-label="Living Room: Song + tidy">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🛋️ Living Room</span><span class="task-name">Song + tidy</span></span>
+            </label><label class="task" data-day="30" data-room="entry" data-key="30-5">
+              <input type="checkbox" data-key="30-5" aria-label="Entry / Laundry: Spritz">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">🧺 Entry / Laundry</span><span class="task-name">Spritz</span></span>
+            </label><label class="task" data-day="30" data-room="office" data-key="30-6">
+              <input type="checkbox" data-key="30-6" aria-label="Office / BST: Organize receipts">
+              <span class="checkmark" aria-hidden="true">✓</span>
+              <span class="task-copy"><span class="room">💌 Office / BST</span><span class="task-name">Organize receipts</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+</main>
+
+<footer>
+  <button class="reset" id="reset" type="button">Reset all progress</button><br>
+  Works offline • Add to Home Screen: Share → Add to Home Screen
+</footer>
+</div>
+
+<script>
+(function() {
+  const KEY = 'r3';
+  const state = JSON.parse(localStorage.getItem(KEY) || '{}');
+  const boxes = [...document.querySelectorAll('input[type="checkbox"][data-key]')];
+  const cards = [...document.querySelectorAll('.day-card')];
+  const today = (new Date().getDate() % 30) + 1;
+
+  document.getElementById('todayLabel').textContent = 'Today is Day ' + today;
+
+  function save() {
+    localStorage.setItem(KEY, JSON.stringify(state));
+  }
+
+  function update() {
+    let done = 0;
+    for (const box of boxes) {
+      const checked = !!state[box.dataset.key];
+      box.checked = checked;
+      if (checked) done++;
+    }
+    document.getElementById('counter').textContent = done + '/180 done';
+    document.getElementById('progressBar').style.width = ((done / 180) * 100) + '%';
+
+    cards.forEach(card => {
+      const day = Number(card.dataset.day);
+      const dayBoxes = boxes.filter(b => b.dataset.key.startsWith(day + '-'));
+      const dayDone = dayBoxes.filter(b => state[b.dataset.key]).length;
+      const pct = Math.round(dayDone / 6 * 100);
+      card.querySelector('.day-percent').textContent = pct + '%';
+      card.querySelector('.day-done').textContent = dayDone;
+      card.classList.toggle('today', day === today);
+    });
+  }
+
+  boxes.forEach(box => {
+    box.addEventListener('change', () => {
+      if (box.checked) state[box.dataset.key] = 1;
+      else delete state[box.dataset.key];
+      save(); update();
+    });
+  });
+
+  document.querySelectorAll('.day-head').forEach(head => {
+    head.addEventListener('click', () => {
+      const card = head.closest('.day-card');
+      const body = card.querySelector('.day-body');
+      const open = !body.hidden;
+      body.hidden = open;
+      card.classList.toggle('expanded', !open);
+      head.setAttribute('aria-expanded', String(!open));
+    });
+  });
+
+  function applyFilter(filter) {
+    cards.forEach(card => {
+      const day = Number(card.dataset.day);
+      let show = true;
+      if (filter === 'today') show = day === today;
+      if (filter === 'office') show = true; // card stays visible; non-office tasks are hidden below
+      card.style.display = show ? '' : 'none';
+      if (filter === 'office') {
+        card.querySelectorAll('.task').forEach(task => {
+          task.style.display = task.dataset.room === 'office' ? '' : 'none';
+        });
+        const body = card.querySelector('.day-body');
+        body.hidden = false;
+        card.classList.add('expanded');
+        card.querySelector('.day-head').setAttribute('aria-expanded', 'true');
+      } else {
+        card.querySelectorAll('.task').forEach(task => task.style.display = '');
+      }
+    });
+  }
+
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      applyFilter(chip.dataset.filter);
+    });
+  });
+
+  document.getElementById('reset').addEventListener('click', () => {
+    if (confirm('Reset all 180 tasks? This cannot be undone.')) {
+      localStorage.removeItem(KEY);
+      location.reload();
+    }
+  });
+
+  update();
+})();
+</script>
+</body>
+</html>
